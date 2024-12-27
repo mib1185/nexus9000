@@ -313,10 +313,16 @@ def set_defaults_and_validate_options():
     # Transfer protocol (http, ftp, tftp, scp, etc.)
     set_default("transfer_protocol", "scp")
     # Directory where the config resides
-    set_default("config_path", "/var/lib/tftpboot/")
+    if os.environ.get("POAP_PHASE", None) == "USB":
+        set_default("config_path", "")
+    else:
+        set_default("config_path", "/var/lib/tftpboot/")
     # Target image and its path (single image is default)
     set_default("target_system_image", "")
-    set_default("target_image_path", "/var/lib/tftpboot/")
+    if os.environ.get("POAP_PHASE", None) == "USB":
+        set_default("target_image_path", "")
+    else:
+        set_default("target_image_path", "/var/lib/tftpboot/")
     set_default("target_kickstart_image", "")
     # Destination image and its path
     set_default("destination_path", "/bootflash/")
@@ -331,8 +337,10 @@ def set_defaults_and_validate_options():
     set_default("https_ignore_certificate", False)
     
     # User app path
-    set_default("user_app_path", "/var/lib/tftpboot/")
-
+    if os.environ.get("POAP_PHASE", None) == "USB":
+        set_default("user_app_path", "")
+    else:
+        set_default("user_app_path", "/var/lib/tftpboot/")
     # MD5 Verification
     set_default("disable_md5", False)
 
@@ -2664,4 +2672,3 @@ if __name__ == "__main__":
                      .format(fname, exc_tb.tb_lineno))
             exc_tb = exc_tb.tb_next
         abort()
-
